@@ -476,7 +476,13 @@ def label_target_columns(df, case_ids, pred_column):
                 else:
                     index = i+1
             #put 1 in the target columns from the first row that has a different start time (happens later in the case)
-            df.loc[indexes[actual_activity_index], case_pred_values[index:]] = 1
+            # Following line was broken and replaced with a for loop
+            case_pred_values_dedup = case_pred_values[index:].drop_duplicates(keep='first')
+            df.loc[indexes[actual_activity_index], case_pred_values_dedup] = 1
+
+            #for activity_col in case_pred_values[index:]:
+            #    df.loc[indexes[actual_activity_index], activity_col] = 1
+
     return df
 
 
@@ -585,6 +591,7 @@ def prepare_dataset(df, experiment_name, case_id_position, start_date_position, 
     if mode == "train":
         X_train, y_train, X_test, y_test, test_case_ids, class_weights, feature_columns = generate_train_and_test_sets(df, target_column, target_column_name,
                                                                                                     event_level, column_type, experiment_name, mode, override)
+        print("Data set prepared")
         return X_train, y_train, X_test, y_test, test_case_ids, target_column_name, event_level, column_type, class_weights, feature_columns
     else:
         df = pad_columns_in_real_data(df.iloc[:, 1:], df.iloc[:, 0], experiment_name)
@@ -593,4 +600,5 @@ def prepare_dataset(df, experiment_name, case_id_position, start_date_position, 
         #for each running case understand how many events you have (with two events you can consider also the explanations from the previous timestep)
         num_events = (df.groupby(df.columns[0]).count()["time_from_start"]).reset_index(drop=True)
         X_test = generate_sequences_for_lstm(df.values, mode)
+        print("Data set prepared")
         return X_test, test_case_ids, target_column_name, feature_columns, num_events
