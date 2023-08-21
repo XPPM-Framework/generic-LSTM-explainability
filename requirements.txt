@@ -1,0 +1,15 @@
+tensorflow-gpu==1.14
+keras==2.3.1
+h5py==2.10.0
+scikit-learn
+tensorrt
+pandas==1.5.3
+scipy==1.11.1
+seaborn
+pyflowchart==0.2.3
+plotly==5.15.0
+matplotlib==3.7.1
+shap==0.31.0
+joblib==1.3.1
+h5py==3.9.0
+shap==0.31
