@@ -4,7 +4,7 @@ from math import sqrt
 import math, random
 from itertools import cycle
 from sklearn.metrics import f1_score
-from scipy import interp
+from numpy import interp
 from sklearn.metrics import roc_curve, auc, precision_recall_curve, average_precision_score
 from scipy import stats
 import matplotlib.pyplot as plt
@@ -55,7 +55,6 @@ def write_results_to_be_plotted(df, experiment_name, n_neurons, n_layers):
         df.loc[df[df.columns[0]] == key, 'Events from start'] = events_from_start
         df.loc[df[df.columns[0]] == key, 'Events from end'] = events_from_end
     df.to_csv(experiment_name + "/results/results_" + str(n_neurons) + "_" + str(n_layers) + ".csv", index=False)
-
 
 def write_scores(scores, experiment_name, n_neurons, n_layers, pred_column, column_type, event_level, target_column_name, df):
     with open(experiment_name + "/results/scores_" + str(n_neurons) + "_" + str(n_layers) + ".txt", "w") as file:
