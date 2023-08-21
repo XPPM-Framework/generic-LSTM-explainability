@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 def plot_histogram(explanation_histogram, experiment_name, index_name=None):
+    print("explainable.py: plot_histogram")
     # Fixing random state for reproducibility
     plt.rcdefaults()
     fig, ax = plt.subplots(figsize=(15, 15))
@@ -34,6 +35,7 @@ def plot_histogram(explanation_histogram, experiment_name, index_name=None):
 
 
 def plot_heatmap(explanation_histogram, experiment_name, index_name=None):
+    print("explainable.py: plot_heatmap")
     df = pd.DataFrame(explanation_histogram)
     df = df.set_index(["feature", "ts"]).unstack()
     df["sort"] = df.abs().max(axis=1)
@@ -52,6 +54,7 @@ def plot_heatmap(explanation_histogram, experiment_name, index_name=None):
         plt.savefig(experiment_name + f"/plots/shap_heatmap_{index_name}.png", dpi=300, bbox_inches="tight")
 
 def refine_explanation_name(x_test_instance, explanation_index, explanation_name, timestep):
+    print("explainable.py: refine_explanation_name")
     if x_test_instance[timestep][explanation_index] == 0:
         if "=" in explanation_name:
             # if column=something it remains as it is
@@ -65,6 +68,7 @@ def refine_explanation_name(x_test_instance, explanation_index, explanation_name
     return explanation_name
 
 def add_explanation_to_histogram(x_test_instance, shap_values_instance, feature_columns, shapley_value, i, explanation_histogram, num_events, columns_info, timestep_histogram):
+    print("explainable.py: add_explanation_to_histogram")
     # take the column name for every explanation
     explanation_index = np.where(shap_values_instance == shapley_value)[1][0]
     timestep = np.where(shap_values_instance == shapley_value)[0][0]
@@ -113,6 +117,7 @@ def add_explanation_to_histogram(x_test_instance, shap_values_instance, feature_
 
 def calculate_histogram_for_shap_chunk(X_test, shapley_chunk, index_name, index, current_case_id, num_events,
                                        feature_columns, explanation_histograms, df, columns_info, timestep_histograms):
+    print("explainable.py: calculate_histogram_for_shap_chunk")
     # if we haven't still created an histogram with that index name create it, otherwise update it from where you left
     if index_name not in explanation_histograms:
         explanation_histogram = []
@@ -138,6 +143,7 @@ def calculate_histogram_for_shap_chunk(X_test, shapley_chunk, index_name, index,
     return explanation_histograms, current_case_id, num_events, timestep_histograms
 
 def find_instance_explanation_values(X_test, shapley_test, i, num_events, prediction_index=0, mode="train"):
+    print("explainable.py: find_instance_explanation_values")
     #mean and std dev are now done on a matrix of all timesteps (up to n events of that case)
     x_test_instance = X_test[i][-num_events:]
     shap_values_instance = shapley_test[prediction_index][i][-num_events:]
@@ -158,6 +164,7 @@ def find_instance_explanation_values(X_test, shapley_test, i, num_events, predic
     return x_test_instance, shap_values_instance, explanation_values
 
 def reduce_instances_for_shap(X_test, df):
+    print("explainable.py: reduce_instances_for_shap")
     partition = int(len(X_test) / 8)
     for i in range(8):
         if i == 0:
@@ -170,6 +177,7 @@ def reduce_instances_for_shap(X_test, df):
 
 def compute_shap_values(df, experiment_name, X_train, X_test, model, column_type,
                          feature_columns, indexes_to_plot, activities_to_plot, pred_column):
+    print("explainable.py: compute_shap_values")
     #X_test_reduced, df_reduced = reduce_instances_for_shap(X_test, df)
     X_test_reduced = X_test
     df_reduced = df
@@ -246,6 +254,7 @@ def convert(obj):
 
 def calculate_histogram_for_shap_values(df, column_type, X_test, shapley_test, feature_columns,
                                         experiment_name, pred_column):
+    print("explainable.py: calculate_histogram_for_shap_values")
     timestep_histogram = {}
     explanation_histogram = []
     # if column numeric if the predictions goes too far from the avg real data discard the prediction from the shap graph
@@ -295,6 +304,7 @@ def calculate_histogram_for_shap_values(df, column_type, X_test, shapley_test, f
 
 
 def compute_shap_values_for_running_cases(experiment_name, X_test, model):
+    print("explainable.py: compute_shap_values_for_running_cases")
     # you should already have the background and you shouldn't need no partition
     background = np.load(experiment_name + "/shap/background.npy", allow_pickle=True)
     explainer = shap.DeepExplainer(model, background)
@@ -316,6 +326,7 @@ def add_explanation(explainable_response, explanation_name):
 def find_explanation_for_categorical_prediction(df, explanation_name, explainable_response_positive,
                                                 explainable_response_negative, pred_attribute,
                                                 shapley_value, i):
+    print("explainable.py: find_explanation_for_categorical_prediction")
     # in categorical case attribute prediction can be 0 or 1 (attribute will be performed or not)
     attribute_prediction = df.loc[i, pred_attribute]
     if attribute_prediction == 1:
@@ -329,6 +340,7 @@ def find_explanation_for_categorical_prediction(df, explanation_name, explainabl
 
 
 def find_explanations_for_running_cases(shapley_test, X_test, df, feature_columns, pred_attributes, column_type, num_events, experiment_name, mode):
+    print("explainable.py: find_explanations_for_running_cases")
     if column_type == 'Categorical':
         # round results between 0 and 1 (activity will be performed or not)
         df.loc[:, pred_attributes] = df.loc[:, pred_attributes].round(0)

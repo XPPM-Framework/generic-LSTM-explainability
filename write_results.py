@@ -10,6 +10,16 @@ from scipy import stats
 import matplotlib.pyplot as plt
 
 def prepare_df(model, X_test, y_test, test_case_ids, target_column_name, pred_column, mode, column_type):
+    print("write_results.py: prepare_df:")
+    print("model: ", model)
+    print("X_test: ", X_test)
+    print("y_test: ", y_test)
+    print("test_case_ids: ", test_case_ids)
+    print("target_column_name: ", target_column_name)
+    print("pred_column: ", pred_column)
+    print("mode: ", mode)
+    print("column_type: ", column_type)
+
     # calculate and reshape predictions
     predictions = model.predict(X_test)
     predictions = np.squeeze(predictions)
@@ -45,6 +55,7 @@ def prepare_df(model, X_test, y_test, test_case_ids, target_column_name, pred_co
 
 
 def write_results_to_be_plotted(df, experiment_name, n_neurons, n_layers):
+    print("write_results.py: write_results_to_be_plotted")
     df['Events from start'] = 0
     df['Events from end'] = 0
     unique_keys = np.unique(df[df.columns[0]])
@@ -57,6 +68,7 @@ def write_results_to_be_plotted(df, experiment_name, n_neurons, n_layers):
     df.to_csv(experiment_name + "/results/results_" + str(n_neurons) + "_" + str(n_layers) + ".csv", index=False)
 
 def write_scores(scores, experiment_name, n_neurons, n_layers, pred_column, column_type, event_level, target_column_name, df):
+    print("write_results.py: write_scores")
     with open(experiment_name + "/results/scores_" + str(n_neurons) + "_" + str(n_layers) + ".txt", "w") as file:
         if column_type == "Numeric":
             if pred_column == 'remaining_time':
@@ -82,6 +94,7 @@ def write_scores(scores, experiment_name, n_neurons, n_layers, pred_column, colu
             print("Accuracy: %.4f Binary Accuracy: %.4f F1: %.4f%%" % (scores[1], scores[2], scores[3]))
 
 def plot_auroc_curve(df, predictions_names, target_column_names, experiment_name):
+    print("write_results.py: plot_auroc_curve")
     false_positive_rates = dict()
     true_positive_rates = dict()
     roc_auc = dict()
@@ -139,6 +152,7 @@ def plot_auroc_curve(df, predictions_names, target_column_names, experiment_name
 
 
 def plot_precision_recall_curve(df, predictions_names, target_column_names, experiment_name):
+    print("write_results.py: plot_precision_recall_curve")
     precisions = dict()
     recalls = dict()
     average_precisions = dict()

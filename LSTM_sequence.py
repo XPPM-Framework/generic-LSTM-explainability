@@ -21,7 +21,9 @@ import numpy as np
 import pandas as pd
 from keras.models import Sequential
 from keras.layers import LSTM, Dense, Activation
+
 from keras.layers.normalization import BatchNormalization
+#from keras.src.layers.normalization.batch_normalization import BatchNormalization
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, Callback
 from keras.models import model_from_json
 from keras.preprocessing import sequence
@@ -77,6 +79,7 @@ def f1(y_true, y_pred):
     return 2*((precision*recall)/(precision+recall+K.epsilon()))
 
 def compile_model(model, event_level, column_type):
+    print("LSTM_sequence.py: compile_model")
     if event_level == 0 and column_type == 'Categorical':
         model.compile(loss='categorical_crossentropy', optimizer='Nadam',
                       metrics=['accuracy', 'categorical_accuracy', f1])
@@ -87,6 +90,7 @@ def compile_model(model, event_level, column_type):
     return model
 
 def train_model(X_train, y_train, n_neurons, n_layers, class_weights, event_level, column_type, experiment_name, maxlen, num_epochs):
+    print("LSTM_sequence.py: train_model")
     # create the model
     model = Sequential()
     if n_layers == 1:
@@ -145,6 +149,7 @@ def train_model(X_train, y_train, n_neurons, n_layers, class_weights, event_leve
 def prepare_data_predict_and_obtain_explanations(experiment_name, df, case_id_position, start_date_position, date_format,
                                     end_date_position, pred_column, mode, pred_attributes, n_neurons, n_layers,
                                     shap_calculation, override, num_epochs=500):
+    print("LSTM_sequence.py: prepare_data_predict_and_obtain_explanations")
     # fix random seed for reproducibility
     np.random.seed(7)
     # train model
