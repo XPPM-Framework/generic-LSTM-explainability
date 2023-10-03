@@ -174,7 +174,7 @@ def prepare_data_predict_and_obtain_explanations(experiment_name, df, case_id_po
             model = train_model(X_train, y_train, n_neurons, n_layers, class_weights, event_level, column_type, experiment_name, X_train.shape[1], num_epochs)
             df = prepare_df(model, X_test, y_test, test_case_ids, target_column_name, pred_column, mode, column_type)
             write_results_to_be_plotted(df, experiment_name, n_neurons, n_layers)
-            scores = model.evaluate(X_test, y_test, verbose=0)
+            scores = model.explain(X_test, y_test, verbose=0)
             write_scores(scores, experiment_name, n_neurons, n_layers, pred_column, column_type, event_level, target_column_name, df)
         else:
             #if override is False you just reload the model and calculate the shapley values

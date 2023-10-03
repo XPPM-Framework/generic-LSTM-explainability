@@ -95,7 +95,7 @@ sess = tf.Session(config=config)
 K.set_session(sess)
 
 # Size limitation of the dataset for testing (Not smart)
-limit = 0.3
+limit = None
 
 df = read_data(filename, limit=limit)
 experiment_name = 'experiment_files/' + experiment_name
